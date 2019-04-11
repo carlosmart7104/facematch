@@ -5,22 +5,24 @@ git clone https://gitlab.com/tecnologias-hexagono/facematch.git
 ```
 
 ## Requisitos previos
-Tener instalado cordova
+Se asume que Android Studio está instalado para compilar la aplicación
+Se asume que nodejs y npm se encuentran instalados también
+
+
+Instalar cordova
 ``` bash
 npm i -g cordova
 ```
 
-Tener instalado quasar cli
+Instalar quasar cli
 ``` bash
 npm i -g @quasar/cli
 ```
 
 ## Preparando el proyecto
-En la carpeta de instalación:
+En la carpeta del proyecto:
 ``` bash
 npm i // para instalar las dependencias
-quasar dev // para desarrollar en navegador ó
-quasar dev -m cordova -T android -D // para desarrollar en el dispositivo
 ```
 
 ## Verificando la instalación
@@ -31,12 +33,25 @@ cd src-c* // moverse a esa carpeta
 
 Dentro de esa se pueden usar los comandos de cordova, pues de hecho es un proyecto de cordova
 ``` bash
-cordova requirements // para que cordova verifique que las dependencias del proyecto están instaladas
+cordova requirements // para que cordova verifique que las dependencias del proyecto están instaladas y configuradas
 cordova platform ls // lista las plataformas instaladas (android, ios, etc)
 cordova platform add android@7.1.1 // ya está instalado pero por si no lo estuviera
 cordova plugin ls // lista los plugins, debe haber 3: whitelist, camerastream y permissions
 ```
 
+## Desarrollo
+Para arrancar el proyecto en modo interactivo (con debug lints y hotreload)
+``` bash
+quasar dev // para desarrollar en navegador ó
+quasar dev -m cordova -T android // para desarrollar en el dispositivo, se puede agregar -D para forzar a iniciar en un dispositivo físico
+```
+
+## Producción
+Para compilar un release del proyecto (un apk que no depende del servidor de quasar)
+``` bash
+quasar build -m cordova -T android
+```
+** La aplicación resultante deberá ser firmada para poder distribuirla **
 
 
 Para más información sobre la terminal de cordova, visitar la documentación oficial:
