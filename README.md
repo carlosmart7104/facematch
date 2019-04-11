@@ -5,8 +5,7 @@ git clone https://gitlab.com/tecnologias-hexagono/facematch.git
 ```
 
 ## Requisitos previos
-Se asume que Android Studio está instalado para compilar la aplicación
-Se asume que nodejs y npm se encuentran instalados también
+Se asume que Android Studio está instalado para compilar la aplicación, y que nodejs y npm se encuentran instalados también.
 
 
 Instalar cordova
