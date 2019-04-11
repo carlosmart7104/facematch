@@ -36,7 +36,7 @@ Dentro de esa se pueden usar los comandos de cordova, pues de hecho es un proyec
 cordova requirements // para que cordova verifique que las dependencias del proyecto están instaladas y configuradas
 cordova platform ls // lista las plataformas instaladas (android, ios, etc)
 cordova platform add android@7.1.1 // ya está instalado pero por si no lo estuviera
-cordova plugin ls // lista los plugins, debe haber 3: whitelist, camerastream y permissions
+cordova plugin ls // lista los plugins, debe haber 3: whitelist, camerastream y android-permissions
 ```
 
 ## Desarrollo
