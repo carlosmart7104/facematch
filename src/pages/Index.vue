@@ -1,82 +1,52 @@
 <template>
   <div id="container">
     <div>
-      <img id="preview" :src="preview">
+      <canvas id="preview" ref="preview"></canvas>
     </div>
     <div id="content">
       <header>
         <img src="statics/icon-qr.png">
-        <span>1 de 2</span>
+        <span>{{ step }} de 2</span>
         <p><b>Verificación de identidad</b><br/>
           Escanea el código QR
         </p>
       </header>
+      <img id="thumbnail" :src="preview">
       <footer>
-        <q-btn color="primary" class="full-width">{{ message }}</q-btn>
+        <q-btn
+          color="primary"
+          class="full-width">
+          {{ message }}
+        </q-btn>
       </footer>
     </div>
   </div>
 </template>
 
 <script>
-const {
-  checkPermission,
-  requestPermission,
-  CAMERA,
-} = cordova.plugins.permissions;
-
 export default {
   name: 'PageIndex',
   data() {
     return {
+      step: 1,
       alert: false,
-      qr: {
+      message: 'Paso 1',
+      preview: null,
+      scan: {
+        isScanning: true,
+        scanningPreview: false,
         timer: null,
       },
-      preview: '',
-      message: 'qr',
     };
-  },
-  beforeCreate() {
-    checkPermission(CAMERA, (status) => {
-      if (!status.hasPermission) {
-        requestPermission(CAMERA, (res) => {
-          if (res.hasPermission) {
-            this.startCamera();
-          } else {
-            this.$q.dialog({
-              title: 'Lo sentimos :C',
-              message: 'El acceso a la cámara es necesario.',
-              preventClose: true,
-              ok: true,
-            });
-          }
-        }, () => {
-          this.$q.dialog({
-            title: 'Lo sentimos :C',
-            message: 'No es posible acceder a la cámara.',
-            preventClose: true,
-            ok: true,
-          });
-        });
-      } else {
-        this.startCamera();
-      }
-    }, () => {
-      this.$q.dialog({
-        title: 'Lo sentimos :C',
-        message: 'No es posible acceder a la cámara.',
-        preventClose: true,
-        ok: true,
-      });
-    });
   },
   mounted() {
     qrcode.callback = (data) => {
       if (typeof data === 'string') {
+        console.log(data);
         if (!data.includes('Error')) {
-          console.log('data found!');
+          console.log('QR data found!');
           console.log(data);
+          this.stopScanning();
           this.message = data;
           if (!this.alert) {
             this.alert = true;
@@ -87,40 +57,51 @@ export default {
               ok: true,
             }).then(() => {
               this.alert = false;
+              this.startScannign();
             });
           }
         }
       }
     };
-    this.qr.timer = setInterval(() => {
-      qrcode.decode(this.preview);
-    }, 500);
+    this.startCamera();
+    this.startScannign();
   },
   methods: {
     startCamera() {
-      if (CameraStream !== undefined) {
-        CameraStream.start((res) => {
-          // console.log(res);
-          this.preview = res;
-        }, (err) => {
-          console.log('Error al iniciar CameraStream:');
-          console.log(err);
-        });
-      }
-    },
-    errorDialog() {
-      console.log('Error Dialog!!!');
-      this.$q.dialog({
-        title: 'Lo sentimos :C',
-        message: 'Éste QR no es compatible con FaceMatch',
-        preventClose: true,
-        ok: true,
+      console.log('startCamera');
+      CanvasCamera.initialize(this.$refs.preview);
+      CanvasCamera.start({
+        fps: 20,
+        use: 'data',
+        onAfterDraw: ((frame) => {
+          this.preview = frame.renderer.data.data;
+        }),
+      }, (err) => {
+        console.log('CanvasCamera.start() error');
+        console.log(err);
       });
+    },
+    stopCamera() {
+      console.log('startCamera()');
+      CanvasCamera.stop((err) => {
+        console.log('CanvasCamera.stop() error');
+        console.log(err);
+      });
+    },
+    startScannign() {
+      console.log('startScannign');
+      this.scan.timer = setInterval(() => {
+        qrcode.decode(this.preview);
+      }, 250);
+    },
+    stopScanning() {
+      console.log('stopScanning()');
+      clearInterval(this.scan.timer);
     },
   },
   beforeDestroy() {
-    clearInterval(this.qr.timer);
-    CameraStream.stop();
+    this.stopScanning();
+    this.stopCamera();
   },
 };
 </script>
@@ -136,8 +117,8 @@ export default {
     position: absolute
     top: 0
     left: 0
-    width: 100vw
-    height: 100vh
+    width: 100vw;
+    height: 100vh;
     background-color: #333c
   #content
     z-index: 1
@@ -146,6 +127,10 @@ export default {
     left: 0
     width: 100vw
     min-height: 100vh
+    #thumbnail
+      margin-top: 150px;
+      width: 150px
+      border: 1px solid red
 header, footer
   padding: 15px
   background-color: white
@@ -168,7 +153,6 @@ header
     display: block
     padding-left: 70px
 footer
-  display: none
   position: absolute
   bottom: 0
   width: 100%

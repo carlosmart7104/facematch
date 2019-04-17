@@ -23,11 +23,10 @@ module.exports = {
   ],
 
   globals: {
-    'ga': true, // Google Analytics
     'cordova': true,
     '__statics': true,
-    'CameraStream': true,
-    'qrcode': true,
+    'CanvasCamera': true,
+    'qrcode': true
   },
 
   // add your custom rules here

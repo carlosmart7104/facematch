@@ -7,8 +7,6 @@
 <script>
 export default {
   name: 'App',
-  beforeCreate() {
-  },
 };
 </script>
 
