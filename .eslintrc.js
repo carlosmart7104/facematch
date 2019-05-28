@@ -26,7 +26,9 @@ module.exports = {
     'cordova': true,
     '__statics': true,
     'CanvasCamera': true,
-    'qrcode': true
+    'qrcode': true,
+    'b64toBlob': true,
+    'b64toJpg': true,
   },
 
   // add your custom rules here

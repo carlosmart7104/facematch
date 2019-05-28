@@ -5,6 +5,8 @@ const routes = [
     component: () => import('layouts/Default.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
+      { path: 'info/:uuid', component: () => import('pages/Info.vue') },
+      { path: 'fail', component: () => import('pages/Fail.vue') },
     ],
   },
 ];
